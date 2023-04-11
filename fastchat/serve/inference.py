@@ -61,6 +61,8 @@ def generate_stream(model, tokenizer, params, device,
     max_new_tokens = int(params.get("max_new_tokens", 256))
     stop_str = params.get("stop", None)
 
+    print(prompt)
+    
     input_ids = tokenizer(prompt).input_ids
     output_ids = list(input_ids)
 
