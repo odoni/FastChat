@@ -75,7 +75,7 @@ def generate_stream(model, tokenizer, params, device,
             logits = out.logits
             past_key_values = out.past_key_values
         else:
-            print("ok1")
+            print("ok1: " + past_key_values[0][0])
             attention_mask = torch.ones(
                 1, past_key_values[0][0].shape[-2] + 1, device=device)
             out = model(input_ids=torch.as_tensor([[token]], device=device),
