@@ -62,7 +62,7 @@ def generate_stream(model, tokenizer, params, device,
     stop_str = params.get("stop", None)
 
     print(prompt)
-    
+
     input_ids = tokenizer(prompt).input_ids
     output_ids = list(input_ids)
 
@@ -179,3 +179,43 @@ def chat_loop(model_name: str, device: str, num_gpus: str, load_8bit: bool,
 
         if debug:
             print("\n", {"prompt": prompt, "outputs": outputs}, "\n")
+
+def load_api_model(model_name: str, device: str, num_gpus: str, load_8bit: bool, debug: bool):
+    return load_model(model_name, device, num_gpus, load_8bit, debug)
+
+def api_chat(model: AutoModelForCausalLM, tokenizer: AutoTokenizer, model_name: str, device: str, conv_template: str, temperature: float, max_new_tokens: int, debug: bool, inp: str):
+    # Chat
+    conv = conv_templates[conv_template].copy()
+    
+    conv.append_message(conv.roles[0], inp)
+    conv.append_message(conv.roles[1], None)
+
+    prompt = conv.get_prompt()
+    skip_echo_len = len(prompt.replace("</s>", " ")) + 1
+
+    params = {
+        "model": model_name,
+        "prompt": prompt,
+        "temperature": temperature,
+        "max_new_tokens": max_new_tokens,
+        "stop": conv.sep if conv.sep_style == SeparatorStyle.SINGLE else conv.sep2,
+    }
+
+    output_stream = generate_stream(model, tokenizer, params, device)
+    
+    pre = 0
+    return_output = ""
+    for outputs in output_stream:
+        outputs = outputs[skip_echo_len:].strip()
+        outputs = outputs.split(" ")
+        now = len(outputs) - 1
+        if now > pre:
+            print(" ".join(outputs[pre:now]), end=" ", flush=True)
+            pre = now
+    return_output += " ".join(outputs[pre:])
+    conv.messages[-1][-1] = outputs.strip()
+
+    if debug:
+        print("\n", {"prompt": prompt, "outputs": outputs}, "\n")
+    
+    return " ".join(return_output)
