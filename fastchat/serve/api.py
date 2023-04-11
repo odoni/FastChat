@@ -16,7 +16,7 @@ def chat():
     if request.method == "POST":
         # get the user's message from the form
         user_message = request.form.get("message")
-        prompt = "Human: " + user_message
+        prompt = user_message
         print(prompt)
         output = api_chat(ApiModel.model, ApiModel.tokenizer, args.model_name, args.device, args.conv_template, args.temperature, args.max_new_tokens, args.debug, prompt)
         return jsonify({"text": output})
