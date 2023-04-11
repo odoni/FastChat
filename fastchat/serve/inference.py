@@ -202,8 +202,6 @@ def api_chat(model: AutoModelForCausalLM, tokenizer: AutoTokenizer, model_name: 
     }
 
     output_stream = generate_stream(model, tokenizer, params, device)
-    
-    print("\n\n" + output_stream + "\n\n")
 
     pre = 0
     return_output = ""
