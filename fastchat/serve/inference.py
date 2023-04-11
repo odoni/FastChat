@@ -61,8 +61,6 @@ def generate_stream(model, tokenizer, params, device,
     max_new_tokens = int(params.get("max_new_tokens", 256))
     stop_str = params.get("stop", None)
 
-    print(prompt)
-
     input_ids = tokenizer(prompt).input_ids
     output_ids = list(input_ids)
 
@@ -170,6 +168,8 @@ def chat_loop(model_name: str, device: str, num_gpus: str, load_8bit: bool,
             "max_new_tokens": max_new_tokens,
             "stop": conv.sep if conv.sep_style == SeparatorStyle.SINGLE else conv.sep2,
         }
+
+        print(params)
 
         chatio.prompt_for_output(conv.roles[1])
         output_stream = generate_stream_func(model, tokenizer, params, device)
