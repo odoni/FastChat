@@ -25,7 +25,7 @@ def chat():
         return render_template("chat.html")
 
 def main(args):
-    ApiModel.tokenizer, ApiModel.model = load_api_model(args.model_name, args.device, args.num_gpus, args.load_8bit, args.debug)
+    ApiModel.model, ApiModel.tokenizer = load_api_model(args.model_name, args.device, args.num_gpus, args.load_8bit, args.debug)
 
 
 if __name__ == "__main__":

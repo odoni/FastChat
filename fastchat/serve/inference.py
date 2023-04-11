@@ -183,7 +183,7 @@ def chat_loop(model_name: str, device: str, num_gpus: str, load_8bit: bool,
 def load_api_model(model_name: str, device: str, num_gpus: str, load_8bit: bool, debug: bool):
     return load_model(model_name, device, num_gpus, load_8bit, debug)
 
-def api_chat(model: AutoModelForCausalLM, tokenizer: AutoTokenizer, model_name: str, device: str, conv_template: str, temperature: float, max_new_tokens: int, debug: bool, inp: str):
+def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str, temperature: float, max_new_tokens: int, debug: bool, inp: str):
     # Chat
     conv = conv_templates[conv_template].copy()
     
