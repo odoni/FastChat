@@ -211,12 +211,12 @@ def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str,
         outputs = outputs.split(" ")
         now = len(outputs) - 1
         if now > pre:
-            print(" ".join(outputs[pre:now]), end=" ", flush=True)
+            # print(" ".join(outputs[pre:now]), end=" ", flush=True)
+            return_output += " ".join(outputs[pre:now])
             pre = now
-    return_output += " ".join(outputs[pre:])
-    conv.messages[-1][-1] = outputs.strip()
+        return_output += " ".join(outputs[pre:])
 
     if debug:
-        print("\n", {"prompt": prompt, "outputs": outputs}, "\n")
+        print("\n", {"prompt": prompt, "outputs": return_output}, "\n")
     
     return " ".join(return_output)
