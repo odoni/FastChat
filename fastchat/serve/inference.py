@@ -208,6 +208,7 @@ def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str,
     return_output = ""
     for outputs in output_stream:
         outputs = outputs[skip_echo_len:].strip()
+        print("\n\n out: " + outputs + "\n\n")
         outputs = outputs.split(" ")
         now = len(outputs) - 1
         if now > pre:
