@@ -11,6 +11,7 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script> -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
     <style>
         body {
             background-color: rgba(68,70,84);
@@ -73,6 +74,7 @@
 
     <script>
         $(document).ready(function() {
+            const converter = new showdown.Converter();
             $("#send-button").click(function() {
                 var message = $("#prompt").val();
                 if (message.trim() !== '') {
@@ -89,7 +91,8 @@
                         data: {message: message},
                         success: function(response) {
                             // $('#chat-container').append('<div class="alert alert-secondary" role="alert"><p><strong>Você:</strong> ' + message + '</p><p><strong>Globoso GPT:</strong> ' + response.text + '</p>');
-                            $('#chat-container').append('<div style="color: white; background-color: rgba(52,53,65); padding: 10px; margin: 10px"><p>Você: <br>' + message + '</p><p style="margin-top: 10px"> Globoso GPT: <br> ' + response.text + '</p>');
+                            const htmlText = converter.makeHtml(response.text);
+                            $('#chat-container').append('<div style="color: white; background-color: rgba(52,53,65); padding: 10px; margin: 10px"><p>Você: <br>' + message + '</p><p style="margin-top: 10px"> Globoso GPT: <br> ' + htmlText + '</p>');
                             $('#prompt').val('');
                         },
                         complete: function () {
