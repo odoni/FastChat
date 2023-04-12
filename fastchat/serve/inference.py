@@ -206,16 +206,16 @@ def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str,
 
     pre = 0
     return_output = ""
-    print(output_stream)
     for outputs in output_stream:
         outputs = outputs[skip_echo_len:].strip()
-        outputs = outputs.split(" ")
-        now = len(outputs) - 1
-        if now > pre:
-            # print(" ".join(outputs[pre:now]), end=" ", flush=True)
-            return_output += " ".join(outputs[pre:now])
-            pre = now
-        return_output += " ".join(outputs[pre:])
+        return_output = outputs
+        # outputs = outputs.split(" ")
+        # now = len(outputs) - 1
+        # if now > pre:
+        #     # print(" ".join(outputs[pre:now]), end=" ", flush=True)
+        #     return_output += " ".join(outputs[pre:now])
+        #     pre = now
+        # return_output += " ".join(outputs[pre:])
 
     if debug:
         print("\n", {"prompt": prompt, "outputs": return_output}, "\n")
