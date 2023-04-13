@@ -195,7 +195,7 @@ def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str,
     skip_echo_len = len(prompt.replace("</s>", " ")) + 1
 
 
-    print("\n\n" + prompt "\n\n")
+    print("\n\n" + prompt + "\n\n")
 
     params = {
         "model": model_name,
