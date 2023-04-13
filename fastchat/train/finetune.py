@@ -209,6 +209,7 @@ def train(
     trainer.train(resume_from_checkpoint=resume_from_checkpoint)
 
     model.save_pretrained(output_dir)
+    model.config.to_json_file("config.json")
 
     print("\n If there's a warning about missing keys above, please disregard :)")
 
