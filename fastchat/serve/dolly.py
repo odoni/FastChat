@@ -1,3 +1,5 @@
+import torch
+from transformers import pipeline
 from instruct_pipeline import InstructionTextGenerationPipeline
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
