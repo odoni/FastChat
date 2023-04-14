@@ -1,7 +1,6 @@
 import torch
-import instruct_pipeline
 from transformers import pipeline
-from instruct_pipeline import InstructionTextGenerationPipeline
+from .instruct_pipeline import InstructionTextGenerationPipeline
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-12b", padding_side="left")
