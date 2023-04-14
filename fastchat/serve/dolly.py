@@ -3,8 +3,8 @@ from transformers import pipeline
 from .instruct_pipeline import InstructionTextGenerationPipeline
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("ddatabricks/dolly-v2-7b", padding_side="left", torch_dtype=torch.bfloat16)
-model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-7b", device_map="auto")
+tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-7b", padding_side="left", torch_dtype=torch.bfloat16)
+model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-7b", device_map="auto", torch_dtype=torch.bfloat16)
 
 generate_text = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
 
