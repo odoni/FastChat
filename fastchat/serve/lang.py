@@ -5,6 +5,7 @@ import torch
 import pandas as pd
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.indexes import VectorstoreIndexCreator
+from langchain.agents import create_csv_agent
 
 # loader = CSVLoader(file_path='/home/odoni/vicuna/FastChat/source_files')
 
