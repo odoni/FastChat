@@ -28,4 +28,4 @@ llm_chain = LLMChain(prompt=prompt,
 
 question = "What is the capital of England?"
 
-print(llm_chain.run(question))
+print("A: " + llm_chain.run(question))
