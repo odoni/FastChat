@@ -11,7 +11,7 @@ prompt = PromptTemplate(template=template, input_variables=["question"])
 
 model_id = 'lmsys/vicuna-7b-delta-v0'# go for a smaller model if you dont have the VRAM
 tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id, load_in_8bit=True, device_map='auto')
+model = AutoModelForSeq2SeqLM.from_pretrained(model_id, load_in_8bit=True, device_map='auto')
 
 pipe = pipeline(
     "text2text-generation",
