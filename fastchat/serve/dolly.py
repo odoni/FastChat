@@ -7,7 +7,7 @@ from peft import PeftModel
 print("Loading model")
 tokenizer = AutoTokenizer.from_pretrained("EleutherAI/pythia-12b", padding_side="left")
 model = AutoModelForCausalLM.from_pretrained("EleutherAI/pythia-12b", device_map="auto")
-model = PeftModel.from_pretrained(model, "/home/odoni/dolly/output/dolly2_local_v2", use_ram_optimized_load=False)
+model = PeftModel.from_pretrained(model, "/home/odoni/dolly/output/dolly2_local_v2", use_ram_optimized_load=False, device_map={'':0})
 
 print("Loading text generation")
 generate_text = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
