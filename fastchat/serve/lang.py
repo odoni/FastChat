@@ -123,6 +123,6 @@ documents = [Document(t) for t in text_list]
 service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, embed_model=embed_model)
 index = GPTSimpleVectorIndex.from_documents(documents, service_context=service_context)
 
-response = index.query( "What's BloombergGPT?")
+response = index.query( "What is the age of universe?")
 
 print(response.response)
