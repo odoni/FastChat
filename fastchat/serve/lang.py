@@ -9,7 +9,7 @@ import logging
 logging.getLogger().setLevel(logging.CRITICAL)
 
 class customLLM(LLM):
-    model_name = "chavinlo/alpaca-native"
+    model_name = "decapoda-research/llama-7b-hf"
     pipeline = pipeline("text-generation", model=model_name, device=0, model_kwargs={"torch_dtype":torch.bfloat16}, load_in_8bit=True)
 
     def _call(self, prompt, stop=None):
