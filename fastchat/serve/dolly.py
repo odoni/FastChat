@@ -5,7 +5,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 print("Loading model")
 tokenizer = AutoTokenizer.from_pretrained("databricks/dolly-v2-7b", padding_side="left", torch_dtype=torch.bfloat16)
-model = AutoModelForCausalLM.from_pretrained("databricks/dolly-v2-7b", device_map="auto", torch_dtype=torch.bfloat16)
+model = AutoModelForCausalLM.from_pretrained("/home/odoni/dolly/output/dolly2_local_v2", device_map="auto", torch_dtype=torch.bfloat16)
 
 print("Loading text generation")
 generate_text = InstructionTextGenerationPipeline(model=model, tokenizer=tokenizer)
