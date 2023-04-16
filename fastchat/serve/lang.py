@@ -9,7 +9,7 @@ import logging
 logging.getLogger().setLevel(logging.CRITICAL)
 
 class customLLM(LLM):
-    model_name = "google/flan-t5-large"
+    model_name = "lmsys/vicuna-7b-delta-v0"
     pipeline = pipeline("text2text-generation", model=model_name, device=0, model_kwargs={"torch_dtype":torch.bfloat16})
 
     def _call(self, prompt, stop=None):
