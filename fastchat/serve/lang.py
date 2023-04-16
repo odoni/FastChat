@@ -1,28 +1,37 @@
 from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig, pipeline
 from langchain.llms import HuggingFacePipeline
 from langchain import PromptTemplate, LLMChain
-
 import torch
+import pandas as pd
+from langchain.document_loaders.csv_loader import CSVLoader
+from langchain.indexes import VectorstoreIndexCreator
 
-tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
+loader = CSVLoader(file_path='/home/odoni/vicuna/FastChat/source_files')
 
-base_model = LlamaForCausalLM.from_pretrained(
-    "chavinlo/alpaca-native",
-    load_in_8bit=True,
-    device_map='auto',
-)
+index = VectorstoreIndexCreator().from_loaders([loader])
 
-pipe = pipeline(
-    "text-generation",
-    model=base_model, 
-    tokenizer=tokenizer, 
-    max_length=2054,
-    temperature=0.6,
-    top_p=0.95,
-    repetition_penalty=1.2
-)
+query = "how many people are female?"
+print(index.query(query))
 
-local_llm = HuggingFacePipeline(pipeline=pipe)
+# tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
+
+# base_model = LlamaForCausalLM.from_pretrained(
+#     "chavinlo/alpaca-native",
+#     load_in_8bit=True,
+#     device_map='auto',
+# )
+
+# pipe = pipeline(
+#     "text-generation",
+#     model=base_model, 
+#     tokenizer=tokenizer, 
+#     max_length=2054,
+#     temperature=0.6,
+#     top_p=0.95,
+#     repetition_penalty=1.2
+# )
+
+# local_llm = HuggingFacePipeline(pipeline=pipe)
 
 # template = """A chat between a curious human and an artificial intelligence assistant. The artificial intelligence assistant name is GlobosoGPT. The assistant gives helpful, detailed, and polite answers to the human's questions.
 # Human: What are the key differences between renewable and non-renewable energy sources?
@@ -48,19 +57,19 @@ local_llm = HuggingFacePipeline(pipeline=pipe)
 # Assistant: 
 # """
 
-template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
+# template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
 
-### Instruction: 
-{instruction}
+# ### Instruction: 
+# {instruction}
 
-Answer:"""
+# Answer:"""
 
-prompt = PromptTemplate(template=template, input_variables=["instruction"])
+# prompt = PromptTemplate(template=template, input_variables=["instruction"])
 
-llm_chain = LLMChain(prompt=prompt, 
-                     llm=local_llm
-                     )
+# llm_chain = LLMChain(prompt=prompt, 
+#                      llm=local_llm
+#                      )
 
-question = "What is the capital of England?"
+# question = "What is the capital of England?"
 
-print(llm_chain.run(question))
+# print(llm_chain.run(question))
