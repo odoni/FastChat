@@ -1,26 +1,37 @@
-from langchain import PromptTemplate, LLMChain
+from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig, pipeline
 from langchain.llms import HuggingFacePipeline
+from langchain import PromptTemplate, LLMChain
+
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, AutoModelForSeq2SeqLM
 
-template = """Question: {question}
+tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
 
-Answer: Let's think step by step."""
-
-prompt = PromptTemplate(template=template, input_variables=["question"])
-
-model_id = 'lmsys/vicuna-7b-delta-v0'# go for a smaller model if you dont have the VRAM
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForSeq2SeqLM.from_pretrained(model_id, load_in_8bit=True, device_map='auto')
+base_model = LlamaForCausalLM.from_pretrained(
+    "chavinlo/alpaca-native",
+    load_in_8bit=True,
+    device_map='auto',
+)
 
 pipe = pipeline(
-    "text2text-generation",
-    model=model, 
+    "text-generation",
+    model=base_model, 
     tokenizer=tokenizer, 
-    max_length=512
+    max_length=256,
+    temperature=0.6,
+    top_p=0.95,
+    repetition_penalty=1.2
 )
 
 local_llm = HuggingFacePipeline(pipeline=pipe)
+
+template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction: 
+{instruction}
+
+Answer:"""
+
+prompt = PromptTemplate(template=template, input_variables=["instruction"])
 
 llm_chain = LLMChain(prompt=prompt, 
                      llm=local_llm
@@ -28,4 +39,4 @@ llm_chain = LLMChain(prompt=prompt,
 
 question = "What is the capital of England?"
 
-print("A: " + llm_chain.run(question))
+print(llm_chain.run(question))
