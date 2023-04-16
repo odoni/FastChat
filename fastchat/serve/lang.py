@@ -4,10 +4,10 @@ from langchain import PromptTemplate, LLMChain
 
 import torch
 
-tokenizer = LlamaTokenizer.from_pretrained("~/vicuna/vicuna-7b-delta-v0")
+tokenizer = LlamaTokenizer.from_pretrained("lmsys/vicuna-7b-delta-v0")
 
 base_model = LlamaForCausalLM.from_pretrained(
-    "~/vicuna/vicuna-7b-delta-v0",
+    "lmsys/vicuna-7b-delta-v0",
     load_in_8bit=True,
     device_map='auto',
 )
@@ -17,7 +17,7 @@ pipe = pipeline(
     model=base_model, 
     tokenizer=tokenizer, 
     max_length=256,
-    temperature=0.4,
+    temperature=0.6,
     top_p=0.95,
     repetition_penalty=1.2
 )
