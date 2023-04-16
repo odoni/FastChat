@@ -38,7 +38,7 @@ agent = create_csv_agent(local_llm,
                          '/home/odoni/vicuna/FastChat/source_files/train.csv', 
                          verbose=True)
 
-agent.run("how many rows are there?")
+agent.run("how many people are female?")
 
 # template = """A chat between a curious human and an artificial intelligence assistant. The artificial intelligence assistant name is GlobosoGPT. The assistant gives helpful, detailed, and polite answers to the human's questions.
 # Human: What are the key differences between renewable and non-renewable energy sources?
