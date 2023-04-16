@@ -6,32 +6,38 @@ import pandas as pd
 from langchain.document_loaders.csv_loader import CSVLoader
 from langchain.indexes import VectorstoreIndexCreator
 
-loader = CSVLoader(file_path='/home/odoni/vicuna/FastChat/source_files')
+# loader = CSVLoader(file_path='/home/odoni/vicuna/FastChat/source_files')
 
-index = VectorstoreIndexCreator().from_loaders([loader])
+# index = VectorstoreIndexCreator().from_loaders([loader])
 
-query = "how many people are female?"
-print(index.query(query))
+# query = "how many people are female?"
+# print(index.query(query))
 
-# tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
+tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
 
-# base_model = LlamaForCausalLM.from_pretrained(
-#     "chavinlo/alpaca-native",
-#     load_in_8bit=True,
-#     device_map='auto',
-# )
+base_model = LlamaForCausalLM.from_pretrained(
+    "chavinlo/alpaca-native",
+    load_in_8bit=True,
+    device_map='auto',
+)
 
-# pipe = pipeline(
-#     "text-generation",
-#     model=base_model, 
-#     tokenizer=tokenizer, 
-#     max_length=2054,
-#     temperature=0.6,
-#     top_p=0.95,
-#     repetition_penalty=1.2
-# )
+pipe = pipeline(
+    "text-generation",
+    model=base_model, 
+    tokenizer=tokenizer, 
+    max_length=2054,
+    temperature=0.6,
+    top_p=0.95,
+    repetition_penalty=1.2
+)
 
-# local_llm = HuggingFacePipeline(pipeline=pipe)
+local_llm = HuggingFacePipeline(pipeline=pipe)
+
+agent = create_csv_agent(local_llm, 
+                         '/home/odoni/vicuna/FastChat/source_files/train.csv', 
+                         verbose=True)
+
+agent.run("how many rows are there?")
 
 # template = """A chat between a curious human and an artificial intelligence assistant. The artificial intelligence assistant name is GlobosoGPT. The assistant gives helpful, detailed, and polite answers to the human's questions.
 # Human: What are the key differences between renewable and non-renewable energy sources?
