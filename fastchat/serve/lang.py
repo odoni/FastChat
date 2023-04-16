@@ -9,7 +9,7 @@ Answer: Let's think step by step."""
 
 prompt = PromptTemplate(template=template, input_variables=["question"])
 
-model_id = '~/vicuna/vicuna-7b-delta-v0'# go for a smaller model if you dont have the VRAM
+model_id = 'lmsys/vicuna-7b-delta-v0'# go for a smaller model if you dont have the VRAM
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(model_id, load_in_8bit=True)
 
