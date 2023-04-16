@@ -57,8 +57,6 @@ Answer:"""
 
 prompt = PromptTemplate(template=template, input_variables=["instruction"])
 
-print("\n\n\n" + prompt + "\n\n\n")
-
 llm_chain = LLMChain(prompt=prompt, 
                      llm=local_llm
                      )
