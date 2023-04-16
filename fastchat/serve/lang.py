@@ -10,7 +10,7 @@ logging.getLogger().setLevel(logging.CRITICAL)
 
 class customLLM(LLM):
     model_name = "lmsys/vicuna-7b-delta-v0"
-    pipeline = pipeline("text2text-generation", model=model_name, device=0, model_kwargs={"torch_dtype":torch.bfloat16}, load_in_8bit=True)
+    pipeline = pipeline("text-generation", model=model_name, device=0, model_kwargs={"torch_dtype":torch.bfloat16}, load_in_8bit=True)
 
     def _call(self, prompt, stop=None):
         return self.pipeline(prompt, max_length=9999)[0]["generated_text"]
