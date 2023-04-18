@@ -1,4 +1,4 @@
-from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig, pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, pipeline
 from langchain.llms import HuggingFacePipeline
 from langchain import PromptTemplate, LLMChain
 from langchain import PromptTemplate, LLMChain
@@ -7,9 +7,9 @@ import torch
 model_id = "lmsys/vicuna-7b-delta-v0"
 # model_id = "chavinlo/alpaca-native"
 
-tokenizer = LlamaTokenizer.from_pretrained(model_id)
+tokenizer = AutoTokenizer.from_pretrained(model_id)
 
-base_model = LlamaForCausalLM.from_pretrained(
+base_model = AutoModelForCausalLM.from_pretrained(
     model_id,
     load_in_8bit=True,
     device_map='auto',
