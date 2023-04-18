@@ -4,10 +4,13 @@ from langchain import PromptTemplate, LLMChain
 from langchain import PromptTemplate, LLMChain
 import torch
 
-tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
+model_id = "lmsys/vicuna-7b-delta-v0"
+# model_id = "chavinlo/alpaca-native"
+
+tokenizer = LlamaTokenizer.from_pretrained(model_id)
 
 base_model = LlamaForCausalLM.from_pretrained(
-    "chavinlo/alpaca-native",
+    model_id,
     load_in_8bit=True,
     device_map='auto',
 )
