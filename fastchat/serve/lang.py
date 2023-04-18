@@ -60,6 +60,8 @@ Assistant:
 
 prompt = PromptTemplate(template=template, input_variables=["instruction"])
 
+print(prompt.format(instruction="What is the capital of England?"))
+
 llm_chain = LLMChain(prompt=prompt, 
                      llm=local_llm
                      )
