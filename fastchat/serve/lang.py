@@ -43,6 +43,14 @@ openai_worker_thread = Thread(target=openai_worker, daemon=True)
 local_worker_thread.start()
 openai_worker_thread.start()
 
+@app.get("/")
+async def get_chat_html():
+    return FileResponse("templates/chat.html")
+
+@app.get("/factor.csv")
+async def get_chat_html():
+    return FileResponse("factor.csv")
+
 @app.post("/message", response_model=Answer)
 async def post_message(message_obj: Message):
     message_dict = message_obj.dict()
