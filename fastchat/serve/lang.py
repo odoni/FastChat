@@ -4,10 +4,12 @@ from pydantic import BaseModel
 from queue import Queue
 from threading import Thread
 import time
+from lang_load_local import load_local_agent
 
 app = FastAPI()
 local_queue = Queue()
 openai_queue = Queue()
+local_agent = load_local_agent()
 
 class Message(BaseModel):
     message: str
@@ -28,7 +30,7 @@ def local_worker():
         message_obj = local_queue.get()
         if message_obj is None:
             break
-        message_obj["answer"] = process_message(message_obj["message"], message_obj["model"])
+        message_obj["answer"] = local_agent.run(message_obj["message"])
         message_obj["processed"] = True
 
 def openai_worker():
@@ -36,7 +38,8 @@ def openai_worker():
         message_obj = openai_queue.get()
         if message_obj is None:
             break
-        message_obj["answer"] = process_message(message_obj["message"], message_obj["model"])
+        answer = local_agent.run(message_obj["message"])
+        message_obj["answer"] = answer
         message_obj["processed"] = True
 
 local_worker_thread = Thread(target=local_worker, daemon=True)
