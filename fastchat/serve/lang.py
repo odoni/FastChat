@@ -1,72 +1,65 @@
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, pipeline
-from langchain.llms import HuggingFacePipeline
-from langchain import PromptTemplate, LLMChain
-from langchain import PromptTemplate, LLMChain
-import torch
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from queue import Queue
+from threading import Thread
+import time
 
-model_id = "lmsys/vicuna-7b-delta-v0"
-# model_id = "chavinlo/alpaca-native"
+app = FastAPI()
+local_queue = Queue()
+openai_queue = Queue()
 
-tokenizer = AutoTokenizer.from_pretrained(model_id)
+class Message(BaseModel):
+    message: str
+    model: str
 
-base_model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    load_in_8bit=True,
-    device_map='auto',
-)
+class Answer(BaseModel):
+    message: str
+    answer: str
+    model: str
 
-pipe = pipeline(
-    "text-generation",
-    model=base_model, 
-    tokenizer=tokenizer, 
-    max_length=2000,
-    temperature=0.6,
-    top_p=0.95,
-    repetition_penalty=1.2
-)
+def process_message(message: str, model: str) -> str:
+    # Add your message processing logic here
+    time.sleep(2)  # Simulate processing time
+    return f"Processed: {message} using {model}"
 
-local_llm = HuggingFacePipeline(pipeline=pipe)
+def local_worker():
+    while True:
+        message_obj = local_queue.get()
+        if message_obj is None:
+            break
+        message_obj["answer"] = process_message(message_obj["message"], message_obj["model"])
+        message_obj["processed"] = True
 
-# template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
+def openai_worker():
+    while True:
+        message_obj = openai_queue.get()
+        if message_obj is None:
+            break
+        message_obj["answer"] = process_message(message_obj["message"], message_obj["model"])
+        message_obj["processed"] = True
 
-# ### Instruction: 
-# {instruction}
+local_worker_thread = Thread(target=local_worker, daemon=True)
+openai_worker_thread = Thread(target=openai_worker, daemon=True)
+local_worker_thread.start()
+openai_worker_thread.start()
 
-# Answer:"""
+@app.post("/message", response_model=Answer)
+async def post_message(message_obj: Message):
+    message_dict = message_obj.dict()
+    message_dict["processed"] = False
 
-template = """A chat between a curious human and an artificial intelligence assistant.
-The artificial intelligence assistant name is GlobosoGPT. The assistant gives helpful, detailed, and polite answers to the human's questions.
-Human: What are the key differences between renewable and non-renewable energy sources?
-Renewable energy sources are those that can be replenished naturally in a relatively 
-short amount of time, such as solar, wind, hydro, geothermal, and biomass. 
-Non-renewable energy sources, on the other hand, are finite and will eventually be 
-depleted, such as coal, oil, and natural gas. Here are some key differences between 
-renewable and non-renewable energy sources:
-1. Availability: Renewable energy sources are virtually inexhaustible, while non-renewable 
-energy sources are finite and will eventually run out.
-2. Environmental impact: Renewable energy sources have a much lower environmental impact 
-than non-renewable sources, which can lead to air and water pollution, greenhouse gas emissions, 
-and other negative effects.
-3. Cost: Renewable energy sources can be more expensive to initially set up, but they typically 
-have lower operational costs than non-renewable sources.
-4. Reliability: Renewable energy sources are often more reliable and can be used in more remote 
-locations than non-renewable sources.
-5. Flexibility: Renewable energy sources are often more flexible and can be adapted to different 
-situations and needs, while non-renewable sources are more rigid and inflexible.
-6. Sustainability: Renewable energy sources are more sustainable over the long term, while 
-non-renewable sources are not, and their depletion can lead to economic and social instability.
-Human: {instruction}
-Assistant: 
-"""
+    if message_dict["model"] == "local":
+        local_queue.put(message_dict)
+    elif message_dict["model"] == "openai":
+        openai_queue.put(message_dict)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid model type")
 
-prompt = PromptTemplate(template=template, input_variables=["instruction"])
+    while not message_dict["processed"]:
+        time.sleep(0.1)
 
-print(prompt.format(instruction="What is the capital of England?"))
+    return Answer(**message_dict)
 
-llm_chain = LLMChain(prompt=prompt, 
-                     llm=local_llm
-                     )
-
-question = "What is the capital of England?"
-
-print(llm_chain.run(question))
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
