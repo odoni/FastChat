@@ -46,11 +46,11 @@ openai_worker_thread.start()
 
 @app.get("/")
 async def get_chat_html():
-    return FileResponse("./templates/chat.html")
+    return FileResponse("/home/odoni/vicuna/FastChat/fastchat/serve/templates/chat.html")
 
 @app.get("/factor.csv")
 async def get_chat_html():
-    return FileResponse("./factor.csv")
+    return FileResponse("/home/odoni/vicuna/FastChat/fastchat/serve/factor.csv")
 
 @app.post("/message", response_model=Answer)
 async def post_message(message_obj: Message):
