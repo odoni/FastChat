@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from queue import Queue
 from threading import Thread
 import time
-from lang_load_local import load_local_agent
+from .lang_load_local import load_local_agent
 
 app = FastAPI()
 local_queue = Queue()
