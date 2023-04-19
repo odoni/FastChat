@@ -6,7 +6,7 @@ import torch
 
 def load_local_agent():
     # model_id = "chavinlo/alpaca-native"
-    model_id = "google/flan-t5-large"
+    model_id = "chavinlo/alpaca-native"
     tokenizer = LlamaTokenizer.from_pretrained(model_id)
 
     base_model = LlamaForCausalLM.from_pretrained(
