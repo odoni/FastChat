@@ -19,7 +19,7 @@ class Answer(BaseModel):
 
 def process_message(message: str, model: str) -> str:
     # Add your message processing logic here
-    time.sleep(2)  # Simulate processing time
+    # time.sleep(2)  # Simulate processing time
     return f"Processed: {message} using {model}"
 
 def local_worker():
