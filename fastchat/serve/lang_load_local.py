@@ -26,13 +26,4 @@ def load_local_agent():
     )
     llm = HuggingFacePipeline(pipeline=pipe)
 
-    template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
-
-    ### Instruction: 
-    {instruction}
-
-    Answer:"""
-
-    prompt = PromptTemplate(template=template, input_variables=["instruction"])
-
-    return create_csv_agent(llm, '/home/odoni/vicuna/FastChat/fastchat/serve/factor.csv', prompt=prompt)
+    return create_csv_agent(llm, '/home/odoni/vicuna/FastChat/fastchat/serve/factor.csv')

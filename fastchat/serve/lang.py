@@ -30,6 +30,15 @@ def local_worker():
         message_obj = local_queue.get()
         if message_obj is None:
             break
+
+        try:
+            answer = local_agent.run(message_obj["message"])
+        except Exception as e:
+            answer = str(e)
+            if not answer.startswith("Could not parse LLM output: `"):
+                answer = "Sorry, I couldn't find the answer for your inquire."
+            answer = answer.removeprefix("Could not parse LLM output: `Answer: ").removesuffix("`")
+
         message_obj["answer"] = local_agent.run(message_obj["message"])
         message_obj["processed"] = True
 
