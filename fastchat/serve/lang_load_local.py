@@ -5,10 +5,12 @@ from langchain import PromptTemplate, LLMChain
 import torch
 
 def load_local_agent():
-    tokenizer = LlamaTokenizer.from_pretrained("chavinlo/alpaca-native")
+    # model_id = "chavinlo/alpaca-native"
+    model_id = "google/flan-t5-large"
+    tokenizer = LlamaTokenizer.from_pretrained(model_id)
 
     base_model = LlamaForCausalLM.from_pretrained(
-        "chavinlo/alpaca-native",
+        model_id,
         load_in_8bit=True,
         device_map='auto',
     )
@@ -23,4 +25,14 @@ def load_local_agent():
         repetition_penalty=1.2
     )
     llm = HuggingFacePipeline(pipeline=pipe)
-    return create_csv_agent(llm, '/home/odoni/vicuna/FastChat/fastchat/serve/factor.csv', verbose=False, prefix="Final Answer:")
+
+    template = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+    ### Instruction: 
+    {instruction}
+
+    Answer:"""
+
+    prompt = PromptTemplate(template=template, input_variables=["instruction"])
+
+    return create_csv_agent(llm, '/home/odoni/vicuna/FastChat/fastchat/serve/factor.csv', prompt=prompt)
