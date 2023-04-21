@@ -64,6 +64,10 @@ async def get_chat_html():
 async def get_chat_html():
     return FileResponse("/home/odoni/vicuna/FastChat/fastchat/serve/factor.csv")
 
+@app.get("/factor.json")
+async def get_chat_html():
+    return FileResponse("/home/odoni/vicuna/FastChat/fastchat/serve/factor.json")
+
 @app.post("/message", response_model=Answer)
 async def post_message(message_obj: Message):
     message_dict = message_obj.dict()
