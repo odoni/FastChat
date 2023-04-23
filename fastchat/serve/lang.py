@@ -31,13 +31,22 @@ def local_worker():
         if message_obj is None:
             break
 
+        prompt = """Below is an instruction that describes a task. Write a response that appropriately completes the request. Don't make up answer.
+
+        ### Instruction:
+        """ + message_obj["message"] + """
+
+        ### Response:
+
+        """
+
         try:
-            answer = local_agent.run(message_obj["message"])
+            answer = local_agent.run(prompt)
         except Exception as e:
             answer = str(e)
             if not answer.startswith("Could not parse LLM output: `"):
                 answer = "Sorry, I couldn't find the answer for your inquire."
-            answer = answer.removeprefix("Could not parse LLM output: `Answer: ").removesuffix("`")
+            answer = answer.removeprefix("Could not parse LLM output: `").removesuffix("`")
 
         message_obj["answer"] = local_agent.run(message_obj["message"])
         message_obj["processed"] = True
