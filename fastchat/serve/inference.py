@@ -188,12 +188,14 @@ def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str,
     # Chat
     conv = conv_templates[conv_template].copy()
     
-    conv.append_message(conv.roles[0], inp)
-    conv.append_message(conv.roles[1], None)
+    # conv.append_message(conv.roles[0], inp)
+    # conv.append_message(conv.roles[1], None)
 
-    prompt = conv.get_prompt()
+    # prompt = conv.get_prompt()
     skip_echo_len = len(prompt.replace("</s>", " ")) + 1
 
+
+    prompt = inp
 
     print("\n\n" + prompt + "\n\n")
 
