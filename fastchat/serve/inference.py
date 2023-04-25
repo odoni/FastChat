@@ -189,7 +189,7 @@ def api_chat(model, tokenizer, model_name: str, device: str, conv_template: str,
     prompt = inp
     conv = conv_templates[conv_template].copy()
     
-    conv.append_message(conv.roles[0], inp)
+    conv.append_message(conv.roles[0], "### input \n" + inp)
     conv.append_message(conv.roles[1], None)
 
     prompt = conv.get_prompt()
