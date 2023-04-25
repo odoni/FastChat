@@ -15,7 +15,7 @@ class ApiModel:
 def chat():
     if request.method == "POST":
         # get the user's message from the form
-        json_data = request.get_json()
+        json_data = clean_prompt(request.get_json())
         print(json_data)
         prompt = json_data.get("message")
         output = api_chat(ApiModel.model, ApiModel.tokenizer, args.model_name, args.device, args.conv_template, args.temperature, args.max_new_tokens, args.debug, prompt)
@@ -23,6 +23,11 @@ def chat():
     else:
         # render the chat web interface
         return render_template("chat.html")
+
+def clean_prompt(prompt: str):
+    new_prompt =  prompt.replace("Use the following portion of a long document to see if any of the text is relevant to answer the question. \r\nReturn any relevant text verbatim.", "")
+    new_prompt = "### input\r\n" + new_prompt
+    return new_prompt
 
 def main(args):
     ApiModel.model, ApiModel.tokenizer = load_api_model(args.model_name, args.device, args.num_gpus, args.load_8bit, args.debug)
