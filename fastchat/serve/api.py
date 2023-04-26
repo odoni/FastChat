@@ -30,7 +30,7 @@ def clean_prompt(prompt: str):
     new_prompt =  new_prompt.replace("#", "")
     new_prompt =  new_prompt.replace("# ", "")
     new_prompt =  new_prompt.replace("**", "")
-    new_prompt = "### input" + new_prompt
+    new_prompt = "### input: " + new_prompt
     return new_prompt
 
 def main(args):
