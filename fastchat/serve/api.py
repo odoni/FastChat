@@ -27,8 +27,8 @@ def chat():
 def clean_prompt(prompt: str):
     new_prompt =  prompt.replace("Use the following portion of a long document to see if any of the text is relevant to answer the question. \r\n", "")
     new_prompt =  new_prompt.replace("Return any relevant text verbatim.", "")
-    new_prompt =  new_prompt.replace("#", "")
     new_prompt =  new_prompt.replace("# ", "")
+    new_prompt =  new_prompt.replace("#", "")
     new_prompt =  new_prompt.replace("**", "")
     new_prompt = "### input: " + new_prompt
     return new_prompt
